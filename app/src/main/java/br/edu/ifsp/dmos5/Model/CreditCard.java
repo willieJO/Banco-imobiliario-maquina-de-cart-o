@@ -1,9 +1,6 @@
 package br.edu.ifsp.dmos5.Model;
 
-import java.util.ArrayList;
-import java.util.Random;
-
-import br.edu.ifsp.dmos5.Model.Utils.ExceptionUtils;
+import br.edu.ifsp.dmos5.Utils.ExceptionUtils;
 
 public class CreditCard {
     private int id;
@@ -20,16 +17,12 @@ public class CreditCard {
         saldo += saldo + valor;
     }
 
-    public void debitValue(Double valor) {
-        try {
-            if (valor > saldo) {
-                throw  new ExceptionUtils();
-            }
-            saldo = saldo - valor;
-
-        } catch (ExceptionUtils ex) {
-            saldo = saldo;
+    public void debitValue(Double valor) throws ExceptionUtils {
+        if (valor > saldo) {
+            throw  new ExceptionUtils();
         }
+        saldo = saldo - valor;
+
     }
 
 }

@@ -1,4 +1,4 @@
-package br.edu.ifsp.dmos5.Model.Utils;
+package br.edu.ifsp.dmos5.Utils;
 
 public class ExceptionUtils extends  Exception {
     public ExceptionUtils() {}
