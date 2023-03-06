@@ -38,8 +38,13 @@ public class StarBank {
     public void recive(CreditCard card, double valor) {
         card.creditValue(valor);
     }
-    public boolean play(CreditCard card,double valor) {
-        return true; // ?????/
+    public boolean pay(CreditCard card,double valor) {
+        try {
+            card.debitValue(valor);
+            return true;
+        } catch (ExceptionUtils e) {
+            return false;
+        }
     }
 
 }
