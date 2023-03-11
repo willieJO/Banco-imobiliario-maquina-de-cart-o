@@ -32,10 +32,11 @@ public class MainActivity extends AppCompatActivity {
     private Button jogador4;
     private Button jogador5;
     private Button jogador6;
+    private Button completaRodada;
     private ArrayList<Button> listaDeJogadores;
     private AlertDialog alerta;
     private CreditCard cardAtual;
-
+    private static final int valorAoCompletarRodada = 10000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         jogador4 = findViewById(R.id.buttonJogador4);
         jogador5 = findViewById(R.id.buttonJogador5);
         jogador6 = findViewById(R.id.buttonJogador6);
+        completaRodada = findViewById(R.id.completaRodada);
         // atribui os onClick
         iniciar.setOnClickListener(view -> jogadoresVisiveis());
         jogador1.setOnClickListener(view -> gerarOpcaoJogador(jogador1));
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         jogador4.setOnClickListener(view -> gerarOpcaoJogador(jogador4));
         jogador5.setOnClickListener(view -> gerarOpcaoJogador(jogador5));
         jogador6.setOnClickListener(view -> gerarOpcaoJogador(jogador6));
+        completaRodada.setOnClickListener(view -> completaRodada());
         // Cria a lista de jogadores e adiciona
         listaDeJogadores = new ArrayList<Button>();
         listaDeJogadores.add(jogador1);
@@ -81,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         for (Button jogador: listaDeJogadores) {
             jogador.setVisibility(View.VISIBLE);
         }
+        completaRodada.setVisibility(View.VISIBLE);
     }
 
     public void gerarOpcaoJogador (Button jogador) {
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         cardAtual.setId(id);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Escolha uma opção:");
-        builder.setCancelable(false);
+
         builder.setPositiveButton("Receber", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -122,8 +126,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                // Cancela o modal quando o usuário clica fora dele
-                modalBuilder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                modalBuilder.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.cancel();
@@ -153,7 +156,18 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 double valor = obterValor(input.getText().toString());
-                                banco.pay(cardAtual,valor);
+                                boolean retornoAcao = banco.pay(cardAtual,valor);
+                                final AlertDialog.Builder modalBuilder = new AlertDialog.Builder(MainActivity.this);
+                                String titleText = retornoAcao ? "Ação realizada com sucesso" : "Falha na ação, jogador não possui esse valor";
+                                modalBuilder.setTitle(titleText);
+                                modalBuilder.setCancelable(false);
+                                modalBuilder.setPositiveButton("Fechar", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.cancel();
+                                    }
+                                });
+                                modalBuilder.show();
                             }
                         });
                         modalBuilder.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -169,7 +183,82 @@ public class MainActivity extends AppCompatActivity {
                 modalBuilder.setNegativeButton("Jogador", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
+                        final AlertDialog.Builder modalBuilder = new AlertDialog.Builder(MainActivity.this);
+                        final EditText inputNumeroCartao = new EditText(MainActivity.this);
+                        final EditText inputValorTransferencia = new EditText(MainActivity.this);
+                        modalBuilder.setTitle("Transferencia para jogador");
+                        modalBuilder.setCancelable(false);
+                        // Configurações do campo de entrada para número do cartão
+                        inputNumeroCartao.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+                        // Configurações do campo de entrada para o valor da transferência
+                        inputValorTransferencia.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+                        // Criação do layout personalizado com os títulos e campos de entrada
+                        LinearLayout layout = new LinearLayout(MainActivity.this);
+                        layout.setOrientation(LinearLayout.VERTICAL);
+
+                        TextView textNumeroCartao = new TextView(MainActivity.this);
+                        textNumeroCartao.setText("Digite o número do cartão:");
+                        textNumeroCartao.setGravity(Gravity.CENTER);
+                        layout.addView(textNumeroCartao);
+                        layout.addView(inputNumeroCartao);
+
+                        TextView textValorTransferencia = new TextView(MainActivity.this);
+                        textValorTransferencia.setText("Valor da transferência:");
+                        textValorTransferencia.setGravity(Gravity.CENTER);
+                        layout.addView(textValorTransferencia);
+                        layout.addView(inputValorTransferencia);
+
+                        modalBuilder.setView(layout);
+                        modalBuilder.setNegativeButton("Enviar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                CreditCard cartaoReceptor = new CreditCard();
+                                int idReceptor;
+                                double valor;
+                                try {
+                                    idReceptor = Integer.parseInt(inputNumeroCartao.getText().toString());
+                                    valor = Double.parseDouble(inputValorTransferencia.getText().toString());
+                                    if (idReceptor == cardAtual.getId()) {
+                                        dialogInterface.cancel();
+                                        final AlertDialog.Builder modalBuilder = new AlertDialog.Builder(MainActivity.this);
+                                        modalBuilder.setTitle("Você não pode transferir para você mesmo");
+                                        modalBuilder.setPositiveButton("Fechar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                dialogInterface.cancel();
+                                            }
+                                        });
+                                        modalBuilder.show();
+                                    } else {
+                                        cartaoReceptor.setId(idReceptor);
+                                        banco.transfer(cardAtual,cartaoReceptor,valor);
+                                        final AlertDialog.Builder modalBuilder = new AlertDialog.Builder(MainActivity.this);
+                                        modalBuilder.setTitle("Transferencia realizada com sucesso");
+                                        modalBuilder.setPositiveButton("Fechar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                dialogInterface.cancel();
+                                            }
+                                        });
+                                        modalBuilder.show();
+                                    }
+
+                                } catch (NumberFormatException e) {
+                                    Toast.makeText(MainActivity.this,"Erro nos valores digitados",Toast.LENGTH_SHORT);
+                                    dialogInterface.cancel();
+                                }
+
+                            }
+                        });
+                        modalBuilder.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        });
+                        modalBuilder.show();
                     }
                 });
                 modalBuilder.show();
@@ -202,25 +291,77 @@ public class MainActivity extends AppCompatActivity {
                 modalBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // só para ficar mais visivel para o usuario
+                        dialogInterface.cancel();
                     }
                 });
                 modalBuilder.setCancelable(false);
                 modalBuilder.show();
             }
         });
+
         builder.show();
     }
 
-    public void cartaoTransferir(Double valor,CreditCard jogadorSelecionado) {
-        banco.recive(jogadorSelecionado,valor);
-    }
     public double obterValor(String valor) {
         try {
             return Double.parseDouble(valor.toString());
         } catch (NumberFormatException e) {
             return 0;
         }
+    }
+    public void completaRodada() {
+        AlertDialog.Builder modalBuilder = new AlertDialog.Builder(MainActivity.this);
+        modalBuilder.setTitle("Coloque o numero do cartão");
+        final EditText input = new EditText(MainActivity.this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        modalBuilder.setView(input);
+        modalBuilder.setPositiveButton("Completar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String id = input.getText().toString();
+                
+                try {
+                    CreditCard cartao = new CreditCard();
+                    cartao.setId(Integer.parseInt(id));
+                    boolean retornoRound =  banco.roundCompleted(cartao,valorAoCompletarRodada);
+                    if (retornoRound) {
+                        final AlertDialog.Builder modalBuilder = new AlertDialog.Builder(MainActivity.this);
+                        modalBuilder.setTitle("Transferencia realizada com sucesso");
+                        modalBuilder.setPositiveButton("Fechar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        });
+                        modalBuilder.show();
+                    } else {
+                        final AlertDialog.Builder modalBuilder = new AlertDialog.Builder(MainActivity.this);
+                        modalBuilder.setTitle("Erro, verifique o numero informado");
+                        modalBuilder.setPositiveButton("Fechar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        });
+                        modalBuilder.show();
+                    }
+
+
+                } catch (NumberFormatException e) {
+                    Toast.makeText(MainActivity.this,"Numero invalido",Toast.LENGTH_SHORT);
+                }
+                
+                
+                dialogInterface.cancel();
+            }
+        });
+        modalBuilder.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        modalBuilder.show();
     }
 
 }

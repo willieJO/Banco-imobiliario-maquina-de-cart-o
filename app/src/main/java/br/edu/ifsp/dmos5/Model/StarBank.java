@@ -26,15 +26,42 @@ public class StarBank {
         }
     }
 
-    public void roundCompleted(CreditCard card, double valor) {
-        card.creditValue(valor);
+    public boolean roundCompleted(CreditCard card, double valor) {
+        for (CreditCard cartaoRequistado: this.cards) {
+            if (cartaoRequistado.getId() == card.getId()) {
+                cartaoRequistado.creditValue(valor);
+                return true;
+            }
+        }
+        return  false;
     }
 
     public boolean transfer(CreditCard card,CreditCard receptor, double valor) {
-        try {
-            card.debitValue(valor);
+        boolean debitSucess = false;
+        boolean creditSucess = false;
+        for (CreditCard cartaoRequisitado: this.cards) {
+            if (cartaoRequisitado.getId() == receptor.getId()) {
+                cartaoRequisitado.creditValue(valor);
+                debitSucess = true;
+                break;
+            }
+        }
+
+        if (debitSucess) {
+            for (CreditCard cartaoRequisitado: this.cards) {
+                if (cartaoRequisitado.getId() == card.getId()) {
+                    try {
+                        cartaoRequisitado.debitValue(valor);
+                        creditSucess = true;
+                    } catch (ExceptionUtils ex) {
+                        return false;
+                    }
+                }
+            }
+        }
+        if (debitSucess && creditSucess) {
             return true;
-        } catch (ExceptionUtils ex) {
+        } else {
             return false;
         }
     }
@@ -43,6 +70,7 @@ public class StarBank {
         for (CreditCard cartaoRequisitado: this.cards) {
             if (cartaoRequisitado.getId() == card.getId()) {
                 cartaoRequisitado.creditValue(valor);
+                break;
             }
         }
     }
@@ -50,7 +78,8 @@ public class StarBank {
         try {
             for (CreditCard cartaoRequisitado: this.cards) {
                 if (cartaoRequisitado.getId() == card.getId()) {
-                    card.debitValue(valor);
+                    cartaoRequisitado.debitValue(valor);
+                    break;
                 }
             }
             return true;
@@ -63,6 +92,7 @@ public class StarBank {
         for (CreditCard cartaoRequisitado : this.cards) {
             if(cartaoRequisitado.getId() == id) {
                 retornoCartao = cartaoRequisitado;
+                break;
             }
         }
         return  retornoCartao;

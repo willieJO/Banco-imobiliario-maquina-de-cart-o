@@ -31,7 +31,7 @@
             android:visibility="invisible"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Jogador 1" />
+            android:text="Numero do cartão: 1" />
 
         <Button
             android:id="@+id/buttonJogador2"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="70dp"
             android:layout_marginTop="20dp"
-            android:text="Jogador 2" />
+            android:text="Numero do cartão: 2" />
 
     </LinearLayout>
 
@@ -56,7 +56,7 @@
             android:layout_width="150dp"
             android:visibility="invisible"
             android:layout_height="wrap_content"
-            android:text="Jogador 3" />
+            android:text="Numero do cartão: 3" />
 
         <Button
             android:id="@+id/buttonJogador4"
@@ -64,7 +64,7 @@
             android:visibility="invisible"
             android:layout_height="wrap_content"
             android:layout_marginLeft="70dp"
-            android:text="Jogador 4" />
+            android:text="Numero do cartão: 4" />
 
     </LinearLayout>
 
@@ -79,7 +79,7 @@
             android:layout_width="150dp"
             android:visibility="invisible"
             android:layout_height="wrap_content"
-            android:text="Jogador 5" />
+            android:text="Numero do cartão: 5" />
 
         <Button
             android:id="@+id/buttonJogador6"
@@ -87,11 +87,19 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="70dp"
             android:visibility="invisible"
-            android:text="Jogador 6" />
+            android:text="Numero do cartão: 6" />
 
     </LinearLayout>
 
-
+    <Button
+        android:id="@+id/completaRodada"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:text="Completar rodada"
+        android:visibility="invisible"
+        android:textAlignment="center" />
 
 
 
