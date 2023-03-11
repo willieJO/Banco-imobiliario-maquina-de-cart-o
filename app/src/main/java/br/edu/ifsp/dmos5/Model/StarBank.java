@@ -105,5 +105,10 @@ public class StarBank {
         }
         return 0.00;
     }
+    public void reiniciarJogo() {
+        for (CreditCard cartaoDesejado: this.cards) {
+            cartaoDesejado.setSaldo(15000.00);
+        }
+    }
 
 }

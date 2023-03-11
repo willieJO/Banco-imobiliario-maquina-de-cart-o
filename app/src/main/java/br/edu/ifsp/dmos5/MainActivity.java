@@ -33,9 +33,11 @@ public class MainActivity extends AppCompatActivity {
     private Button jogador5;
     private Button jogador6;
     private Button completaRodada;
+    private Button reiniciarJogo;
     private ArrayList<Button> listaDeJogadores;
     private AlertDialog alerta;
     private CreditCard cardAtual;
+
     private static final int valorAoCompletarRodada = 10000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         jogador5 = findViewById(R.id.buttonJogador5);
         jogador6 = findViewById(R.id.buttonJogador6);
         completaRodada = findViewById(R.id.completaRodada);
+        reiniciarJogo = findViewById(R.id.restartGame);
         // atribui os onClick
         iniciar.setOnClickListener(view -> jogadoresVisiveis());
         jogador1.setOnClickListener(view -> gerarOpcaoJogador(jogador1));
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         jogador4.setOnClickListener(view -> gerarOpcaoJogador(jogador4));
         jogador5.setOnClickListener(view -> gerarOpcaoJogador(jogador5));
         jogador6.setOnClickListener(view -> gerarOpcaoJogador(jogador6));
+        reiniciarJogo.setOnClickListener(view -> reiniciarJogo());
         completaRodada.setOnClickListener(view -> completaRodada());
         // Cria a lista de jogadores e adiciona
         listaDeJogadores = new ArrayList<Button>();
@@ -85,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
             jogador.setVisibility(View.VISIBLE);
         }
         completaRodada.setVisibility(View.VISIBLE);
+        reiniciarJogo.setVisibility(View.VISIBLE);
+        iniciar.setEnabled(false);
     }
 
     public void gerarOpcaoJogador (Button jogador) {
@@ -356,6 +362,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         modalBuilder.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        modalBuilder.show();
+    }
+    public void reiniciarJogo(){
+        final AlertDialog.Builder modalBuilder = new AlertDialog.Builder(MainActivity.this);
+        modalBuilder.setTitle("Todos os cartões voltarma para o saldo inicial");
+        banco.reiniciarJogo();
+        modalBuilder.setPositiveButton("Fechar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();
