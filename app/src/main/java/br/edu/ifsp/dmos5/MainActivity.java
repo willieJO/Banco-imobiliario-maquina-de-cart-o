@@ -46,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
         startResources();
         StarBank.getInstance().startCreditCards(listaDeJogadores);
 
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
     }
 
     public void startResources(){

@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">SuperBancoImobiliarioDMO</string>
+    <string name="jogador1">Numero do cartão: 1</string>
+    <string name="jogador2">Numero do cartão: 2</string>
+    <string name="jogador3">Numero do cartão: 3</string>
+    <string name="jogador4">Numero do cartão: 4</string>
+    <string name="jogador5">Numero do cartão: 5</string>
+    <string name="jogador6">Numero do cartão: 6</string>
+    <string name="iniciarJogo">Iniciar jogo</string>
+    <string name="completaRodada">Completar rodada</string>
+    <string name="reiniciarJogo">Reiniciar jogo</string>
 </resources>

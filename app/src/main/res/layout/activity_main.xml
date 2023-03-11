@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="8dp"
+    android:background="@color/white"
     tools:context=".MainActivity">
 
     <Button
@@ -15,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_gravity="center"
-        android:text="Iniciar jogo"
+        android:text="@string/iniciarJogo"
         android:textAlignment="center" />
 
     <LinearLayout
@@ -31,7 +32,7 @@
             android:visibility="invisible"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Numero do cartão: 1" />
+            android:text="@string/jogador1" />
 
         <Button
             android:id="@+id/buttonJogador2"
@@ -40,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="70dp"
             android:layout_marginTop="20dp"
-            android:text="Numero do cartão: 2" />
+            android:text="@string/jogador2" />
 
     </LinearLayout>
 
@@ -56,7 +57,7 @@
             android:layout_width="150dp"
             android:visibility="invisible"
             android:layout_height="wrap_content"
-            android:text="Numero do cartão: 3" />
+            android:text="@string/jogador3" />
 
         <Button
             android:id="@+id/buttonJogador4"
@@ -64,7 +65,7 @@
             android:visibility="invisible"
             android:layout_height="wrap_content"
             android:layout_marginLeft="70dp"
-            android:text="Numero do cartão: 4" />
+            android:text="@string/jogador4" />
 
     </LinearLayout>
 
@@ -79,7 +80,7 @@
             android:layout_width="150dp"
             android:visibility="invisible"
             android:layout_height="wrap_content"
-            android:text="Numero do cartão: 5" />
+            android:text="@string/jogador5" />
 
         <Button
             android:id="@+id/buttonJogador6"
@@ -87,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="70dp"
             android:visibility="invisible"
-            android:text="Numero do cartão: 6" />
+            android:text="@string/jogador6" />
 
     </LinearLayout>
 
@@ -97,7 +98,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_gravity="center"
-        android:text="Completar rodada"
+        android:text="@string/completaRodada"
         android:visibility="invisible"
         android:textAlignment="center" />
     <Button
@@ -106,7 +107,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_gravity="center"
-        android:text="Reinciiar jogo"
+        android:text="@string/reiniciarJogo"
         android:visibility="invisible"
         android:textAlignment="center" />
 
